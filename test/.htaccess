@@ -1,0 +1,6 @@
+#+WebsiteRedirect
+#=[]
+RewriteEngine On
+RewriteOptions InheritBefore
+#-WebsiteRedirect
+
