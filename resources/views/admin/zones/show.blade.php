@@ -95,11 +95,20 @@ $result=json_decode($ok);
                     @endif
                 
                 </td>
+<<<<<<< HEAD
                 <td><b>Flood protection: </b> @if ($result->output->http_flood_protection==true) {{$result->output->http_flood_protection}}
+=======
+                <td><b>Flood protection: </b> @if ($result->output->block_from_viewing==true) {{$result->output->block_from_viewing}}
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
                     
                     @else
                     Not Selected
                     @endif </td>
+<<<<<<< HEAD
+=======
+
+                    
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
             </tr>
 
           

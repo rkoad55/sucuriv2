@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews
@@ -17,3 +18,11 @@
     RewriteRule ^ server.php
 
 </IfModule>
+=======
+#+WebsiteRedirect
+#=[]
+RewriteEngine On
+RewriteOptions InheritBefore
+#-WebsiteRedirect
+
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8

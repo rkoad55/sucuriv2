@@ -120,6 +120,7 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
 
                         </a>
                     </li>
+<<<<<<< HEAD
                     <li {{{ (Request::is('*/urlpaths') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@urlpaths',Request::segment(2))}}">
                             <span class="icon"><i class="far fa-user"></i>
@@ -276,6 +277,8 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
 
                         </a>
                     </li> 
+=======
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
                     
 
                 <?php 
@@ -362,6 +365,7 @@ else{
                             <span class="pull-right-container"></span>
 
                         </a>
+<<<<<<< HEAD
                     </li> 
                     <li {{{ (Request::is('*/urlpaths') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@urlpaths',Request::segment(2))}}">
@@ -521,6 +525,17 @@ else{
                     </li> 
 
 
+=======
+                    </li>
+                    
+
+      
+
+                  
+            
+
+
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
                     <li {{{ (Request::is('*/crypto') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@crypto',Request::segment(2)) }}">
                             <span class="icon"><i class="fas fa-industry"></i> </span>
@@ -530,6 +545,11 @@ else{
                         </a>
                     </li> 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
                     <li {{{ (Request::is('*/content-protection') ? 'class=active' : '') }}} {{{ (Request::is('trails/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@contentProtection',Request::segment(2)) }}">
                             <span class="icon"><i class="fas fa-book"></i> </span>

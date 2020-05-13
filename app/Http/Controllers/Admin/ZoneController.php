@@ -78,6 +78,7 @@ class ZoneController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+<<<<<<< HEAD
 public function pauseInternalIp(Request $request)
     {
       // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
@@ -215,6 +216,8 @@ public function pauseInternalIp(Request $request)
  
       return view('admin.dns.dmainAlias',['sucuri_user'=>$sucuri_user[0]]);
     }
+=======
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
     public function index(Request $request)
     {
 
