@@ -46,7 +46,7 @@ $results=json_decode($ok);
   					<form method="get"  role="form" action="/insertIp" onsubmit="myFunction()"  >      
               <input type="hidden" name="id" value=" <?php if(isset($message)){ } else { echo $id; } ?>">
   						<span>Add IP</span><br>
-  						<input type="text" name="ip" required class="form-control" /><br>
+  						<input type="text" name="ip" required class="form-control" pattern = "\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b" /><br>
   						<span>Select Whitelist Or Blacklist IP</span><br>
   						<select name="list" required class="form-control">
   							<option value="">Select IP List</option>
@@ -148,18 +148,12 @@ $results=json_decode($ok);
 
 
 
-
-
-
-
-
-
-@stop
+@stop 
 
 @section('javascript') 
 <script>
     function myFunction() {
-        alert("New IP has been added");
+        alert("New IP Added...!!!");
     }
 </script>
 @endsection

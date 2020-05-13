@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Analytics;
-use App\Dns;
-use App\test;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Zone;
@@ -25,9 +23,56 @@ class DnsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+public function playIp(Request $req){
+        $users = DB::table('sucuri_user')->where('url' , $req->domain)->get();
+          foreach($users as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+       
+       $curl = curl_init();
+       $auth_data = array( 
+           'k'      => $a_key,
+           's'      => $s_key,
+           'a'  => 'update_setting',
+           'play_internal_ip' =>  $req->value
+           
+       );
+       curl_setopt($curl, CURLOPT_POST, 1);
+       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
+       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result = curl_exec($curl);
+       curl_close($curl); 
+       
+        $result = json_decode($result);   
 
+       $check = DB::table('advanceSetting')->where(['domainID' => $id , 'name' =>  'play_internal_ip'])->get();
 
-     public function deleteIp(Request $req){
+       if($result->messages[0] == "Settings updated"){
+
+          if(count($check) == 0){
+              DB::table('advanceSetting')->insert(
+                ['name' => 'play_internal_ip', 'value' => $req->value , 'domainID' => $id]); 
+          }
+          else{ 
+              DB::update('update advanceSetting set value = "'.$req->value.'" where domainID = "'.$id.'" and name = "play_internal_ip"');  
+          }  
+
+       }  
+       else{
+  
+       }
+ 
+        // return view('admin.dns.aggressive');
+        // return view('admin.dns.aggressive',['sucuri_user'=>$sucuri_user[0]]);
+       return Redirect::back()->with(['sucuri_user', $users[0] ] );
+    }
+
+    public function deleteIp(Request $req){
         $users = DB::table('sucuri_user')->where('url' , $req->domain)->get();
           foreach($users as $user){
           // return "$user->name";
@@ -54,13 +99,29 @@ class DnsController extends Controller
        $result = curl_exec($curl);
        if(!$result){die("Connection Failure");}
        curl_close($curl); 
-       //$result1 = utf8_encode($result);
-       //$result2 =json_decode($result1);
-        //$result=array($result);
-       print_r($auth_data);
-         dd($result);
+       
+        $result = json_decode($result);   
 
-        // return view('admin.dns.show']);
+       $check = DB::table('advanceSetting')->where(['domainID' => $id , 'name' =>  'delete_internal_ip'])->get();
+
+       if($result->messages[0] == "Settings updated"){
+
+          if(count($check) == 0){
+              DB::table('advanceSetting')->insert(
+                ['name' => 'delete_internal_ip', 'value' => $req->value , 'domainID' => $id]); 
+          }
+          else{ 
+              DB::update('update advanceSetting set value = "'.$req->value.'" where domainID = "'.$id.'" and name = "delete_internal_ip"');  
+          }  
+
+       }  
+       else{
+  
+       }
+ 
+        // return view('admin.dns.aggressive');
+        // return view('admin.dns.aggressive',['sucuri_user'=>$sucuri_user[0]]);
+       return Redirect::back()->with(['sucuri_user', $users[0] ] );
     }
      public function forwardQueryStringsMode(Request $req){
         $id=auth()->user()->id;
@@ -622,14 +683,30 @@ public function idsMonitoring(Request $req){
        $result = curl_exec($curl);
        if(!$result){die("Connection Failure");}
        curl_close($curl);
-       //$result1 = utf8_encode($result);
-       //$result2 =json_decode($result1);
-        //$result=array($result);
-         dd($result);
+       
+       $result = json_decode($result);   
 
-        // return view('admin.dns.show']);
+       $check = DB::table('advanceSetting')->where(['domainID' => $id , 'name' =>  'pause_internal_ip'])->get();
+
+       if($result->messages[0] == "Settings updated"){
+
+          if(count($check) == 0){
+              DB::table('advanceSetting')->insert(
+                ['name' => 'pause_internal_ip', 'value' => $req->value , 'domainID' => $id]); 
+          }
+          else{ 
+              DB::update('update advanceSetting set value = "'.$req->value.'" where domainID = "'.$id.'" and name = "pause_internal_ip"');  
+          }  
+
+       }  
+       else{
+  
+       }
+ 
+        // return view('admin.dns.aggressive');
+        // return view('admin.dns.aggressive',['sucuri_user'=>$sucuri_user[0]]);
+       return Redirect::back()->with(['sucuri_user', $users[0] ] );
     }
-
     public function spAnalytics($zone, Request $request)
     {
 
@@ -982,286 +1059,6 @@ if($id!=1){
 //return view('admin.analytics.index', compact('zone','records'));
     }
 
-    public function urlpaths($sucuri_users, Request $request)
-    {
-        
-        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
-
-      $id=auth()->user()->id;
-       $sucuri_users;
-
-        //  $sucuri_users;
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','whitelist_dir')->get();
-    $blackpath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','blacklist_dir')->get();
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        return view('admin.dns.urlpaths',['ok'=>$result ,'id'=>$sucuri_users, 'blackpath'=>$blackpath])->with('whitepath', $whitepath);
-
-//dd($records);
-//return view('admin.analytics.index', compact('zone','records'));
-    }
-
-    public function noncache($sucuri_users, Request $request)
-    {
-        
-        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
-
-      $id=auth()->user()->id;
-       $sucuri_users;
-
-        //  $sucuri_users;
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('noncache')->where('domain_id',$sucuri_users)->where('list','noncache_dir')->get();
-    
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        return view('admin.dns.noncache',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
-
-//dd($records);
-//return view('admin.analytics.index', compact('zone','records'));
-    }
-
-
-
-
-    public function block_from_viewing($sucuri_users, Request $request)
-    {
-        
-        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
-
-         $id=auth()->user()->id;
-       $sucuri_users;
-//die('ok');
-        //  $sucuri_users;
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('block_from_viewing')->where('user_id',$sucuri_users)->get();
-    
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        return view('admin.dns.block_from_viewing',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
-
-//dd($records);
-//return view('admin.analytics.index', compact('zone','records'));
-    }
-
-
-
-    public function block_from_posting($sucuri_users, Request $request)
-    {
-        
-        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
-
-         $id=auth()->user()->id;
-       $sucuri_users;
-//die('ok');
-        //  $sucuri_users;
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('block_from_posting')->where('user_id',$sucuri_users)->get();
-    
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        return view('admin.dns.block_from_posting',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
-
-//dd($records);
-//return view('admin.analytics.index', compact('zone','records'));
-    }
-
-
-
-
-    public function blockcookie($sucuri_users, Request $request)
-    {
-        
-        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
-
-      $id=auth()->user()->id;
-       $sucuri_users;
-
-        //  $sucuri_users;
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('blockcookie')->where('domain_id',$sucuri_users)->get();
-    
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        return view('admin.dns.blockcookie',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
-
-//dd($records);
-//return view('admin.analytics.index', compact('zone','records'));
-    }
-
-    
-
     public function ip($sucuri_users, Request $request)
     {
 
@@ -1464,705 +1261,6 @@ if($id!=1){
     
     }
 
-    public function removewhitedir($sucuri_users,Request $request)
-    {
-     $id = $request->id;
-     $sucuri_users;
- 
-		$this->validate($request,[
-      'remove' => 'required',
-			'id' => 'required'
-        ]);
-       $sucuri_users;
-       DB::delete('delete from url_paths where domain_id = ? and url = ? and list = ?',[$sucuri_users, $request->remove, 'whitelist_dir']);
-                                //$users      = Sucuri::where('id',$sucuri_users)->get();
-                                if($id!=1){
-                                  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->where('user_id',$id)->get();
-                                  //dd($users);
-                         }else{  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();  }
-                               //  dd($users);
-                                // echo "ok"; 
-                                 //die();
-                                foreach($users as $user){
-                                // return "$user->name";
-                                $s_key = "$user->s_key";
-                                    $a_key= "$user->a_key";
-                                } 
-
-
-                                $curl = curl_init();
-                                $auth_data = array(
-                                'k' 		=> $a_key,
-                                's' 		=> $s_key,
-                                'a' 	=> 'update_setting',
-                                'remove_whitelist_dir[]'    =>  $request->remove,
-                                // 'format' =>  'json'
-                                
-                                );
-                                curl_setopt($curl, CURLOPT_POST, 1);
-                                curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-                                curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                                $result = curl_exec($curl);
-                                if(!$result){die("Connection Failure");}
-                                curl_close($curl);
-                                //$result1 = utf8_encode($result);
-                                //$result2 =json_decode($result1);
-                                //$result=array($result);
-                                 $result;
-								 $result = json_decode($result , true);
-    $message="";
-    $index=0;
-    foreach($result as $ok => $data)
-    {	$index++;
-        if($index == 3){
-            foreach ($data as $message) {
-                $this->message= $message;
-            }
-        }
-    }
-
-    $string = implode(" ",$result['messages']);
-
-//		Next Function
-		
-
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','whitelist_dir')->get();
-    $blackpath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','blacklist_dir')->get();
-    DB::delete('delete from url_paths where id = ?',[$sucuri_users]);
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        
-        return view('admin.dns.urlpaths',['ok'=>$result ,'id'=>$sucuri_users, 'blackpath'=>$blackpath, 'message'=> $string])->with('whitepath', $whitepath);
-
-    
-	// return view('admin.dns.urlpaths', ['ok'=>$result1, 'message'=> $string]);
-
-								 
-      // return view('admin.dns.ip', compact('id','ip'));
-    
-    }
-
-    public function removeblackdir($sucuri_users,Request $request)
-    {
-     $id = $request->id;
-     $sucuri_users;
- 
-		$this->validate($request,[
-      'remove' => 'required',
-			'id' => 'required'
-        ]);
-       $sucuri_users;
-       DB::delete('delete from url_paths where domain_id = ? and url = ? and list = ?',[$sucuri_users, $request->remove, 'blacklist_dir']);
-                                //$users      = Sucuri::where('id',$sucuri_users)->get();
-                                if($id!=1){
-                                  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->where('user_id',$id)->get();
-                                  //dd($users);
-                         }else{  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();  }
-                               //  dd($users);
-                                // echo "ok"; 
-                                 //die();
-                                foreach($users as $user){
-                                // return "$user->name";
-                                $s_key = "$user->s_key";
-                                    $a_key= "$user->a_key";
-                                } 
-
-
-                                $curl = curl_init();
-                                $auth_data = array(
-                                'k' 		=> $a_key,
-                                's' 		=> $s_key,
-                                'a' 	=> 'update_setting',
-                                'remove_blacklist_dir[]'    =>  $request->remove,
-                                // 'format' =>  'json'
-                                
-                                );
-                                curl_setopt($curl, CURLOPT_POST, 1);
-                                curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-                                curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                                $result = curl_exec($curl);
-                                if(!$result){die("Connection Failure");}
-                                curl_close($curl);
-                                //$result1 = utf8_encode($result);
-                                //$result2 =json_decode($result1);
-                                //$result=array($result);
-                                 $result;
-								 $result = json_decode($result , true);
-    $message="";
-    $index=0;
-    foreach($result as $ok => $data)
-    {	$index++;
-        if($index == 3){
-            foreach ($data as $message) {
-                $this->message= $message;
-            }
-        }
-    }
-
-    $string = implode(" ",$result['messages']);
-
-//		Next Function
-		
-
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','whitelist_dir')->get();
-    $blackpath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','blacklist_dir')->get();
-    DB::delete('delete from url_paths where id = ?',[$sucuri_users]);
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        
-        return view('admin.dns.urlpaths',['ok'=>$result ,'id'=>$sucuri_users, 'blackpath'=>$blackpath, 'message'=> $string])->with('whitepath', $whitepath);
-
-    
-	// return view('admin.dns.urlpaths', ['ok'=>$result1, 'message'=> $string]);
-
-								 
-      // return view('admin.dns.ip', compact('id','ip'));
-    
-    }
-
-    public function removenoncache($sucuri_users,Request $request)
-    {
-     $id = $request->id;
-     $sucuri_users;
- 
-		$this->validate($request,[
-      'remove' => 'required',
-			'id' => 'required'
-        ]);
-       $sucuri_users;
-       DB::delete('delete from noncache where domain_id = ? and url = ? ',[$sucuri_users, $request->remove]);
-                                //$users      = Sucuri::where('id',$sucuri_users)->get();
-                                if($id!=1){
-                                  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->where('user_id',$id)->get();
-                                  //dd($users);
-                         }else{  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();  }
-                               //  dd($users);
-                                // echo "ok"; 
-                                 //die();
-                                foreach($users as $user){
-                                // return "$user->name";
-                                $s_key = "$user->s_key";
-                                    $a_key= "$user->a_key";
-                                } 
-
-
-                                $curl = curl_init();
-                                $auth_data = array(
-                                'k' 		=> $a_key,
-                                's' 		=> $s_key,
-                                'a' 	=> 'update_setting',
-                                'remove_noncache_dir[]'    =>  $request->remove,
-                                // 'format' =>  'json'
-                                
-                                );
-                                curl_setopt($curl, CURLOPT_POST, 1);
-                                curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-                                curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                                $result = curl_exec($curl);
-                                if(!$result){die("Connection Failure");}
-                                curl_close($curl);
-                                //$result1 = utf8_encode($result);
-                                //$result2 =json_decode($result1);
-                                //$result=array($result);
-                                 $result;
-								 $result = json_decode($result , true);
-    $message="";
-    $index=0;
-    foreach($result as $ok => $data)
-    {	$index++;
-        if($index == 3){
-            foreach ($data as $message) {
-                $this->message= $message;
-            }
-        }
-    }
-
-    $string = implode(" ",$result['messages']);
-
-//		Next Function
-		
-
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('noncache')->where('domain_id',$sucuri_users)->where('list','noncache_dir')->get();
-    
-    DB::delete('delete from noncache where id = ?',[$sucuri_users]);
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        
-        return view('admin.dns.noncache',['ok'=>$result ,'id'=>$sucuri_users, 'message'=> $string])->with('whitepath', $whitepath);
-
-    
-	// return view('admin.dns.urlpaths', ['ok'=>$result1, 'message'=> $string]);
-
-								 
-      // return view('admin.dns.ip', compact('id','ip'));
-    
-    }
-
-
-
-    public function removeblock_fromview($sucuri_users,Request $request)
-    {
-     $id = $request->id;
-     $sucuri_users;
- 
-	
-       $sucuri_users;
-       DB::delete('delete from block_from_viewing where user_id = ?  ',[$sucuri_users]);
-                                //$users      = Sucuri::where('id',$sucuri_users)->get();
-                                if($id!=1){
-                                  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->where('user_id',$id)->get();
-                                  //dd($users);
-                         }else{  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();  }
-                               //  dd($users);
-                                // echo "ok"; 
-                                 //die();
-                                foreach($users as $user){
-                                // return "$user->name";
-                                $s_key = "$user->s_key";
-                                    $a_key= "$user->a_key";
-                                } 
-
-
-                                $curl = curl_init();
-                                $auth_data = array(
-                                'k' 		=> $a_key,
-                                's' 		=> $s_key,
-                                'a' 	=> 'update_setting',
-                                'block_from_viewing[]'    => '',
-                                // 'format' =>  'json'
-                                
-                                );
-                                curl_setopt($curl, CURLOPT_POST, 1);
-                                curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-                                curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                                $result = curl_exec($curl);
-                                if(!$result){die("Connection Failure");}
-                                curl_close($curl);
-                                //$result1 = utf8_encode($result);
-                                //$result2 =json_decode($result1);
-                                //$result=array($result);
-                                 $result;
-								 $result = json_decode($result , true);
-    $message="";
-    $index=0;
-    foreach($result as $ok => $data)
-    {	$index++;
-        if($index == 3){
-            foreach ($data as $message) {
-                $this->message= $message;
-            }
-        }
-    }
-
-    $string = implode(" ",$result['messages']);
-
-//		Next Function
-		
-
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('block_from_viewing')->where('user_id',$sucuri_users)->get();
-    
-   // DB::delete('delete from noncache where id = ?',[$sucuri_users]);
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        
-        return view('admin.dns.block_from_viewing',['ok'=>$result ,'id'=>$sucuri_users, 'message'=> 'Coutry Removed Successfully'])->with('whitepath', $whitepath);
-
-    
-	// return view('admin.dns.urlpaths', ['ok'=>$result1, 'message'=> $string]);
-
-								 
-      // return view('admin.dns.ip', compact('id','ip'));
-    
-    }
-
-
-
-
-
-    public function removeblock_fromposting($sucuri_users,Request $request)
-    {
-     $id = $request->id;
-     $sucuri_users;
- 
-	
-       $sucuri_users;
-       DB::delete('delete from block_from_posting where user_id = ?  ',[$sucuri_users]);
-                                //$users      = Sucuri::where('id',$sucuri_users)->get();
-                                if($id!=1){
-                                  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->where('user_id',$id)->get();
-                                  //dd($users);
-                         }else{  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();  }
-                               //  dd($users);
-                                // echo "ok"; 
-                                 //die();
-                                foreach($users as $user){
-                                // return "$user->name";
-                                $s_key = "$user->s_key";
-                                    $a_key= "$user->a_key";
-                                } 
-
-
-                                $curl = curl_init();
-                                $auth_data = array(
-                                'k' 		=> $a_key,
-                                's' 		=> $s_key,
-                                'a' 	=> 'update_setting',
-                                'block_from_posting[]'    => '',
-                                // 'format' =>  'json'
-                                
-                                );
-                                curl_setopt($curl, CURLOPT_POST, 1);
-                                curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-                                curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                                $result = curl_exec($curl);
-                                if(!$result){die("Connection Failure");}
-                                curl_close($curl);
-                                //$result1 = utf8_encode($result);
-                                //$result2 =json_decode($result1);
-                                //$result=array($result);
-                                 $result;
-								 $result = json_decode($result , true);
-    $message="";
-    $index=0;
-    foreach($result as $ok => $data)
-    {	$index++;
-        if($index == 3){
-            foreach ($data as $message) {
-                $this->message= $message;
-            }
-        }
-    }
-
-    $string = implode(" ",$result['messages']);
-
-//		Next Function
-		
-
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('block_from_posting')->where('user_id',$sucuri_users)->get();
-    
-   // DB::delete('delete from noncache where id = ?',[$sucuri_users]);
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        
-        return view('admin.dns.block_from_posting',['ok'=>$result ,'id'=>$sucuri_users, 'message'=> 'Coutry Removed Successfully'])->with('whitepath', $whitepath);
-
-    
-	// return view('admin.dns.urlpaths', ['ok'=>$result1, 'message'=> $string]);
-
-								 
-      // return view('admin.dns.ip', compact('id','ip'));
-    
-    }
-
-
-
-
-
-
-
-
-
-
-    public function removeblockcookie($sucuri_users,Request $request)
-    {
-     $id = $request->id;
-     $sucuri_users;
- 
-		$this->validate($request,[
-      'remove' => 'required',
-			'id' => 'required'
-        ]);
-       $sucuri_users;
-       DB::delete('delete from blockcookie where domain_id = ? and url = ? ',[$sucuri_users, $request->remove]);
-                                //$users      = Sucuri::where('id',$sucuri_users)->get();
-                                if($id!=1){
-                                  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->where('user_id',$id)->get();
-                                  //dd($users);
-                         }else{  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();  }
-                               //  dd($users);
-                                // echo "ok"; 
-                                 //die();
-                                foreach($users as $user){
-                                // return "$user->name";
-                                $s_key = "$user->s_key";
-                                    $a_key= "$user->a_key";
-                                } 
-
-
-                                $curl = curl_init();
-                                $auth_data = array(
-                                'k' 		=> $a_key,
-                                's' 		=> $s_key,
-                                'a' 	=> 'update_setting',
-                                'remove_block_cookie[]'    =>  $request->remove,
-                                // 'format' =>  'json'
-                                
-                                );
-                                curl_setopt($curl, CURLOPT_POST, 1);
-                                curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-                                curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                                $result = curl_exec($curl);
-                                if(!$result){die("Connection Failure");}
-                                curl_close($curl);
-                                //$result1 = utf8_encode($result);
-                                //$result2 =json_decode($result1);
-                                //$result=array($result);
-                                 $result;
-								 $result = json_decode($result , true);
-    $message="";
-    $index=0;
-    foreach($result as $ok => $data)
-    {	$index++;
-        if($index == 3){
-            foreach ($data as $message) {
-                $this->message= $message;
-            }
-        }
-    }
-
-    $string = implode(" ",$result['messages']);
-
-//		Next Function
-		
-
-
-// if($id!=1){
-  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
-         //dd($users);
-// }else{
-    $whitepath  = DB::table('blockcookie')->where('domain_id',$sucuri_users)->get();
-    
-    DB::delete('delete from blockcookie where id = ?',[$sucuri_users]);
-    // }
-  //  return dd($blackpath);
-
-         foreach($users as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-       
-       $curl = curl_init();
-       $auth_data = array(
-           'k' 		=> $a_key,
-           's' 		=> $s_key,
-           'a' 	=> 'show_settings',
-           'format' =>  'json'
-         
-       );
-       curl_setopt($curl, CURLOPT_POST, 1);
-       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
-       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result = curl_exec($curl);
-       if(!$result){die("Connection Failure");}
-       curl_close($curl);
-       $result1 = utf8_encode($result);
-       $result2 =json_decode($result1);
-        // $result=array($result);
-         $result;
-        // $paths =  Dns::all();
-        // return Dns::find($sucuri_users);
-        
-        return view('admin.dns.blockcookie',['ok'=>$result ,'id'=>$sucuri_users, 'message'=> $string])->with('whitepath', $whitepath);
-
-    
-	// return view('admin.dns.urlpaths', ['ok'=>$result1, 'message'=> $string]);
-
-								 
-      // return view('admin.dns.ip', compact('id','ip'));
-    
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -2343,481 +1441,6 @@ if($id!=1){
 
         // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
 
-    }
-
-    public function insertWhiteURL(Request $req){
-
-      
-      $users1  = DB::table('sucuri_user')->where('id',$req->id)->get();
-        // dump($users->name); 
-         foreach($users1 as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-       
-       
-// return $req->ip;
-// die();
-       if($req->list == 'whitelist_dir'){
-         $bhand = 'whitelist_dir_pattern';
-       }else{
-        $bhand = 'blacklist_dir_pattern';
-
-       }
-       $curl1 = curl_init();
-       $auth_data1 = array(
-           'k'    => $a_key,
-           's'    => $s_key,
-           'a'  => 'update_setting',
-           $req->list =>  $req->ip,
-           $bhand => $req->dir
-           // 'duration'=> $req->time,
-       ); 
-
-       curl_setopt($curl1, CURLOPT_POST, 1);
-       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result1 = curl_exec($curl1);
-       if(!$result1){die("Connection Failure");}
-       curl_close($curl1);
-
-       
-       $message = json_decode($result1);
-
-     $message =$message->messages[0];
-  // $result = json_decode($result1 , true);
-  //   $message="";
-  //   $index=0;
-  //   foreach($result as $ok => $data)
-  //   { $index++;
-  //       if($index == 3){
-  //           foreach ($data as $message) {
-  //               $this->message= $message;
-  //           }
-  //       }
-  //   }
-
-  //   $string = implode(" ",$result['messages']);
-       
-  //      $curl1 = curl_init();
-  //      $auth_data1 = array(
-  //          'k'    => $a_key,
-  //          's'    => $s_key,
-  //          'a'  => 'show_settings',
-  //          'format' =>  'json'
-         
-  //      ); 
-  //      curl_setopt($curl1, CURLOPT_POST, 1);
-  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  //      $result1 = curl_exec($curl1);
-  //      if(!$result1){die("Connection Failure");}
-  //      curl_close($curl1);
-  if($req->dir == 'begins_with'){
-    $req->ip = "^".$req->ip;
-  }elseif($req->dir == 'ends_with'){
-   $req->ip = $req->ip."$";
-  }elseif($req->dir == 'equals'){
-   $req->ip = "^".$req->ip."$";
-  }
-      $data=array('list'=>$req->list, 'url' => $req->ip, 'pattern' =>$req->dir, 'domain_id' => $req->id);
-      DB::table('url_paths')->insert($data);
-      
-      return back()->with('message',$message);
-  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
-
-        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
-    }
-
-    public function insertNonCache(Request $req){
-
-      
-      $users1  = DB::table('sucuri_user')->where('id',$req->id)->get();
-        // dump($users->name); 
-         foreach($users1 as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-
-       
-      
-         $bhand = 'noncache_dir_pattern';
-      //  
-       $curl1 = curl_init();
-       $auth_data1 = array(
-           'k'    => $a_key,
-           's'    => $s_key,
-           'a'  => 'update_setting',
-           $req->list =>  $req->ip,
-           $bhand => $req->dir
-           // 'duration'=> $req->time,
-       ); 
-       
-      //  return $req_>ip;
-       
-       curl_setopt($curl1, CURLOPT_POST, 1);
-       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result1 = curl_exec($curl1);
-       if(!$result1){die("Connection Failure");}
-       curl_close($curl1);
-
-       
-       $message = json_decode($result1);
-
-     $message =$message->messages[0];
-  // $result = json_decode($result1 , true);
-  //   $message="";
-  //   $index=0;
-  //   foreach($result as $ok => $data)
-  //   { $index++;
-  //       if($index == 3){
-  //           foreach ($data as $message) {
-  //               $this->message= $message;
-  //           }
-  //       }
-  //   }
-
-  //   $string = implode(" ",$result['messages']);
-       
-  //      $curl1 = curl_init();
-  //      $auth_data1 = array(
-  //          'k'    => $a_key,
-  //          's'    => $s_key,
-  //          'a'  => 'show_settings',
-  //          'format' =>  'json'
-         
-  //      ); 
-  //      curl_setopt($curl1, CURLOPT_POST, 1);
-  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  //      $result1 = curl_exec($curl1);
-  //      if(!$result1){die("Connection Failure");}
-  //      curl_close($curl1);
-      
-      if($req->dir == 'begins_with'){
-        $req->ip = "^".$req->ip;
-      }elseif($req->dir == 'ends_with'){
-      $req->ip = $req->ip."$";
-      }elseif($req->dir == 'equals'){
-      $req->ip = "^".$req->ip."$";
-      }
-
-      $data=array('list'=>$req->list, 'url' => $req->ip, 'pattern' =>$req->dir, 'domain_id' => $req->id);
-      DB::table('noncache')->insert($data);
-      
-      return back()->with('message', "Added");
-  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
-
-        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
-    }
-
-
-    public function insertBlock_from_view($sucuri_users,Request $req){
-       $sucuri_users;
-     // die('ok');
-      $users1  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();
-        // dump($users); 
-         foreach($users1 as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-
-       
-      
-        /// $bhand = 'block_from_viewing';
-      //  
-       $curl1 = curl_init();
-       $auth_data1 = array(
-           'k'    => $a_key,
-           's'    => $s_key,
-           'a'  => 'update_setting',
-           
-         'block_from_viewing[]' =>  $req->ip,
-         'update_geo_blocking' =>'1'
-          
-           // 'duration'=> $req->time,
-       ); 
-       
-      //  return $req_>ip;
-       
-       curl_setopt($curl1, CURLOPT_POST, 1);
-       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result1 = curl_exec($curl1);
-       if(!$result1){die("Connection Failure");}
-       curl_close($curl1);
-
-       
-       $message1 = json_decode($result1);
-//dd($message);
-     $message =$message1->messages[0];
-      $status =$message1->status;
-  // $result = json_decode($result1 , true);
-  //   $message="";
-  //   $index=0;
-  //   foreach($result as $ok => $data)
-  //   { $index++;
-  //       if($index == 3){
-  //           foreach ($data as $message) {
-  //               $this->message= $message;
-  //           }
-  //       }
-  //   }
-
-  //   $string = implode(" ",$result['messages']);
-       
-  //      $curl1 = curl_init();
-  //      $auth_data1 = array(
-  //          'k'    => $a_key,
-  //          's'    => $s_key,
-  //          'a'  => 'show_settings',
-  //          'format' =>  'json'
-         
-  //      ); 
-  //      curl_setopt($curl1, CURLOPT_POST, 1);
-  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  //      $result1 = curl_exec($curl1);
-  //      if(!$result1){die("Connection Failure");}
-  //      curl_close($curl1);
-      
-     if($status==1){
-
-
-
-      $fetch  = DB::table('block_from_viewing')->where('user_id',$sucuri_users)->get();
-    $count=count($fetch);
-    if($count==1){
-      $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
-     // DB::table('block_from_viewing')->updateOrInsert($data);
-      DB::table('block_from_viewing')->where('user_id', $sucuri_users)->update(['country' => $req->ip]);
-    }else{
-      $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
-      DB::table('block_from_viewing')->updateOrInsert($data);
-    }
-      ///DB::table('table_name')->updateOrInsert($attributes, $values);
-      
-      return back()->with('message', "Country Blocked Successfully");
-
-     }else {
-
-      return back()->with('message', "Country Blocked Unsuccessfully");
-
-
-     }
-  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
-
-        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
-    }
-
-
-
-
-
-    public function insertBlock_from_posting($sucuri_users,Request $req){
-      $sucuri_users;
-    // die('ok');
-     $users1  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();
-       // dump($users); 
-        foreach($users1 as $user){
-         // return "$user->name";
-          $s_key = "$user->s_key";
-           $a_key= "$user->a_key";
-      } 
-       
-
-      
-     
-       /// $bhand = 'block_from_viewing';
-     //  
-      $curl1 = curl_init();
-      $auth_data1 = array(
-          'k'    => $a_key,
-          's'    => $s_key,
-          'a'  => 'update_setting',
-          
-        'block_from_posting[]' =>  $req->ip,
-        'update_geo_blocking' =>'1'
-         
-          // 'duration'=> $req->time,
-      ); 
-      
-     //  return $req_>ip;
-      
-      curl_setopt($curl1, CURLOPT_POST, 1);
-      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      $result1 = curl_exec($curl1);
-      if(!$result1){die("Connection Failure");}
-      curl_close($curl1);
-
-      
-      $message1 = json_decode($result1);
-//dd($message);
-    $message =$message1->messages[0];
-     $status =$message1->status;
- // $result = json_decode($result1 , true);
- //   $message="";
- //   $index=0;
- //   foreach($result as $ok => $data)
- //   { $index++;
- //       if($index == 3){
- //           foreach ($data as $message) {
- //               $this->message= $message;
- //           }
- //       }
- //   }
-
- //   $string = implode(" ",$result['messages']);
-      
- //      $curl1 = curl_init();
- //      $auth_data1 = array(
- //          'k'    => $a_key,
- //          's'    => $s_key,
- //          'a'  => 'show_settings',
- //          'format' =>  'json'
-        
- //      ); 
- //      curl_setopt($curl1, CURLOPT_POST, 1);
- //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
- //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
- //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
- //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
- //      $result1 = curl_exec($curl1);
- //      if(!$result1){die("Connection Failure");}
- //      curl_close($curl1);
-     
-    if($status==1){
-
-
-
-     $fetch  = DB::table('block_from_posting')->where('user_id',$sucuri_users)->get();
-   $count=count($fetch);
-   if($count==1){
-     $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
-    // DB::table('block_from_viewing')->updateOrInsert($data);
-     DB::table('block_from_posting')->where('user_id', $sucuri_users)->update(['country' => $req->ip]);
-   }else{
-     $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
-     DB::table('block_from_posting')->updateOrInsert($data);
-   }
-     ///DB::table('table_name')->updateOrInsert($attributes, $values);
-     
-     return back()->with('message', "Country Blocked Successfully");
-
-    }else {
-
-     return back()->with('message', "Country Blocked Unsuccessfully");
-
-
-    }
- // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
-
-       // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
-   }
-
-
-    public function insertBlockCookie(Request $req){
-
-      
-      $users1  = DB::table('sucuri_user')->where('id',$req->id)->get();
-        // dump($users->name); 
-         foreach($users1 as $user){
-          // return "$user->name";
-           $s_key = "$user->s_key";
-            $a_key= "$user->a_key";
-       } 
-        
-
-       
-      
-         $bhand = 'noncache_dir_pattern';
-      //  
-       $curl1 = curl_init();
-       $auth_data1 = array(
-           'k'    => $a_key,
-           's'    => $s_key,
-           'a'  => 'update_setting',
-           'block_cookie' =>  $req->ip,
-           
-           // 'duration'=> $req->time,
-       ); 
-       
-      //  return $req_>ip;
-       
-       curl_setopt($curl1, CURLOPT_POST, 1);
-       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-       $result1 = curl_exec($curl1);
-       if(!$result1){die("Connection Failure");}
-       curl_close($curl1);
-
-       
-       $message = json_decode($result1);
-
-     $message =$message->messages[0];
-  // $result = json_decode($result1 , true);
-  //   $message="";
-  //   $index=0;
-  //   foreach($result as $ok => $data)
-  //   { $index++;
-  //       if($index == 3){
-  //           foreach ($data as $message) {
-  //               $this->message= $message;
-  //           }
-  //       }
-  //   }
-
-  //   $string = implode(" ",$result['messages']);
-       
-  //      $curl1 = curl_init();
-  //      $auth_data1 = array(
-  //          'k'    => $a_key,
-  //          's'    => $s_key,
-  //          'a'  => 'show_settings',
-  //          'format' =>  'json'
-         
-  //      ); 
-  //      curl_setopt($curl1, CURLOPT_POST, 1);
-  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
-  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
-  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
-  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  //      $result1 = curl_exec($curl1);
-  //      if(!$result1){die("Connection Failure");}
-  //      curl_close($curl1);
-      
-      
-
-      $data=array('url' => $req->ip, 'domain_id' => $req->id);
-      DB::table('blockcookie')->insert($data);
-      
-      return back()->with('message', 'Added');
-  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
-
-        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
     }
 // public function insertIp(){
 //   dd("ok ok o k"); 
@@ -3283,5 +1906,759 @@ return view('admin.analytics.ipDetails', compact('deviceType'));
         return response()->json($country);
     }
 
+   
     
+    public function insertWhiteURL(Request $req){
+
+      
+      $users1  = DB::table('sucuri_user')->where('id',$req->id)->get();
+        // dump($users->name); 
+         foreach($users1 as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+       
+       
+// return $req->ip;
+// die();
+       if($req->list == 'whitelist_dir'){
+         $bhand = 'whitelist_dir_pattern';
+       }else{
+        $bhand = 'blacklist_dir_pattern';
+
+       }
+       $curl1 = curl_init();
+       $auth_data1 = array(
+           'k'    => $a_key,
+           's'    => $s_key,
+           'a'  => 'update_setting',
+           $req->list =>  $req->ip,
+           $bhand => $req->dir
+           // 'duration'=> $req->time,
+       ); 
+
+       curl_setopt($curl1, CURLOPT_POST, 1);
+       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result1 = curl_exec($curl1);
+       if(!$result1){die("Connection Failure");}
+       curl_close($curl1);
+
+       
+       $message = json_decode($result1);
+
+     $message =$message->messages[0];
+  // $result = json_decode($result1 , true);
+  //   $message="";
+  //   $index=0;
+  //   foreach($result as $ok => $data)
+  //   { $index++;
+  //       if($index == 3){
+  //           foreach ($data as $message) {
+  //               $this->message= $message;
+  //           }
+  //       }
+  //   }
+
+  //   $string = implode(" ",$result['messages']);
+       
+  //      $curl1 = curl_init();
+  //      $auth_data1 = array(
+  //          'k'    => $a_key,
+  //          's'    => $s_key,
+  //          'a'  => 'show_settings',
+  //          'format' =>  'json'
+         
+  //      ); 
+  //      curl_setopt($curl1, CURLOPT_POST, 1);
+  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+  //      $result1 = curl_exec($curl1);
+  //      if(!$result1){die("Connection Failure");}
+  //      curl_close($curl1);
+  if($req->dir == 'begins_with'){
+    $req->ip = "^".$req->ip;
+  }elseif($req->dir == 'ends_with'){
+   $req->ip = $req->ip."$";
+  }elseif($req->dir == 'equals'){
+   $req->ip = "^".$req->ip."$";
+  }
+      $data=array('list'=>$req->list, 'url' => $req->ip, 'pattern' =>$req->dir, 'domain_id' => $req->id);
+      DB::table('url_paths')->insert($data);
+      
+      return back()->with('message',$message);
+  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
+
+        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
+    }
+    public function urlpaths($sucuri_users, Request $request)
+    {
+        
+        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
+
+      $id=auth()->user()->id;
+       $sucuri_users;
+
+        //  $sucuri_users;
+
+// if($id!=1){
+  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
+         //dd($users);
+// }else{
+    $whitepath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','whitelist_dir')->get();
+    $blackpath  = DB::table('url_paths')->where('domain_id',$sucuri_users)->where('list','blacklist_dir')->get();
+    // }
+  //  return dd($blackpath);
+
+         foreach($users as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+       
+       $curl = curl_init();
+       $auth_data = array(
+           'k' 		=> $a_key,
+           's' 		=> $s_key,
+           'a' 	=> 'show_settings',
+           'format' =>  'json'
+         
+       );
+       curl_setopt($curl, CURLOPT_POST, 1);
+       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
+       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result = curl_exec($curl);
+       if(!$result){die("Connection Failure");}
+       curl_close($curl);
+       $result1 = utf8_encode($result);
+       $result2 =json_decode($result1);
+        // $result=array($result);
+         $result;
+        // $paths =  Dns::all();
+        // return Dns::find($sucuri_users);
+        return view('admin.dns.urlpaths',['ok'=>$result ,'id'=>$sucuri_users, 'blackpath'=>$blackpath])->with('whitepath', $whitepath);
+
+//dd($records);
+//return view('admin.analytics.index', compact('zone','records'));
+    }
+
+    public function noncache($sucuri_users, Request $request)
+    {
+        
+        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
+
+      $id=auth()->user()->id;
+       $sucuri_users;
+
+        //  $sucuri_users;
+
+// if($id!=1){
+  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
+         //dd($users);
+// }else{
+    $whitepath  = DB::table('noncache')->where('domain_id',$sucuri_users)->where('list','noncache_dir')->get();
+    
+    // }
+  //  return dd($blackpath);
+
+         foreach($users as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+       
+       $curl = curl_init();
+       $auth_data = array(
+           'k' 		=> $a_key,
+           's' 		=> $s_key,
+           'a' 	=> 'show_settings',
+           'format' =>  'json'
+         
+       );
+       curl_setopt($curl, CURLOPT_POST, 1);
+       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
+       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result = curl_exec($curl);
+       if(!$result){die("Connection Failure");}
+       curl_close($curl);
+       $result1 = utf8_encode($result);
+       $result2 =json_decode($result1);
+        // $result=array($result);
+         $result;
+        // $paths =  Dns::all();
+        // return Dns::find($sucuri_users);
+        return view('admin.dns.noncache',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
+
+//dd($records);
+//return view('admin.analytics.index', compact('zone','records'));
+    }
+
+
+
+
+    public function block_from_viewing($sucuri_users, Request $request)
+    {
+        
+        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
+
+         $id=auth()->user()->id;
+       $sucuri_users;
+//die('ok');
+        //  $sucuri_users;
+
+// if($id!=1){
+  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
+         //dd($users);
+// }else{
+    $whitepath  = DB::table('block_from_viewing')->where('user_id',$sucuri_users)->get();
+    
+    // }
+  //  return dd($blackpath);
+
+         foreach($users as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+       
+       $curl = curl_init();
+       $auth_data = array(
+           'k' 		=> $a_key,
+           's' 		=> $s_key,
+           'a' 	=> 'show_settings',
+           'format' =>  'json'
+         
+       );
+       curl_setopt($curl, CURLOPT_POST, 1);
+       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
+       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result = curl_exec($curl);
+       if(!$result){die("Connection Failure");}
+       curl_close($curl);
+       $result1 = utf8_encode($result);
+       $result2 =json_decode($result1);
+        // $result=array($result);
+         $result;
+        // $paths =  Dns::all();
+        // return Dns::find($sucuri_users);
+        return view('admin.dns.block_from_viewing',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
+
+//dd($records);
+//return view('admin.analytics.index', compact('zone','records'));
+    }
+
+
+
+    public function block_from_posting($sucuri_users, Request $request)
+    {
+        
+        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
+
+         $id=auth()->user()->id;
+       $sucuri_users;
+//die('ok');
+        //  $sucuri_users;
+
+// if($id!=1){
+  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
+         //dd($users);
+// }else{
+    $whitepath  = DB::table('block_from_posting')->where('user_id',$sucuri_users)->get();
+    
+    // }
+  //  return dd($blackpath);
+
+         foreach($users as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+       
+       $curl = curl_init();
+       $auth_data = array(
+           'k' 		=> $a_key,
+           's' 		=> $s_key,
+           'a' 	=> 'show_settings',
+           'format' =>  'json'
+         
+       );
+       curl_setopt($curl, CURLOPT_POST, 1);
+       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
+       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result = curl_exec($curl);
+       if(!$result){die("Connection Failure");}
+       curl_close($curl);
+       $result1 = utf8_encode($result);
+       $result2 =json_decode($result1);
+        // $result=array($result);
+         $result;
+        // $paths =  Dns::all();
+        // return Dns::find($sucuri_users);
+        return view('admin.dns.block_from_posting',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
+
+//dd($records);
+//return view('admin.analytics.index', compact('zone','records'));
+    }
+
+
+
+
+    public function blockcookie($sucuri_users, Request $request)
+    {
+        
+        //$zone =  $zoneObj = Zone::where('name',$zone)->first();
+
+      $id=auth()->user()->id;
+       $sucuri_users;
+
+        //  $sucuri_users;
+
+// if($id!=1){
+  $users  = DB::table('sucuri_user')->where('id',$sucuri_users)->get(); 
+         //dd($users);
+// }else{
+    $whitepath  = DB::table('blockcookie')->where('domain_id',$sucuri_users)->get();
+    
+    // }
+  //  return dd($blackpath);
+
+         foreach($users as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+       
+       $curl = curl_init();
+       $auth_data = array(
+           'k' 		=> $a_key,
+           's' 		=> $s_key,
+           'a' 	=> 'show_settings',
+           'format' =>  'json'
+         
+       );
+       curl_setopt($curl, CURLOPT_POST, 1);
+       curl_setopt($curl, CURLOPT_POSTFIELDS, $auth_data);
+       curl_setopt($curl, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result = curl_exec($curl);
+       if(!$result){die("Connection Failure");}
+       curl_close($curl);
+       $result1 = utf8_encode($result);
+       $result2 =json_decode($result1);
+        // $result=array($result);
+         $result;
+        // $paths =  Dns::all();
+        // return Dns::find($sucuri_users);
+        return view('admin.dns.blockcookie',['ok'=>$result ,'id'=>$sucuri_users])->with('whitepath', $whitepath);
+
+//dd($records);
+//return view('admin.analytics.index', compact('zone','records'));
+    }
+
+    public function insertNonCache(Request $req){
+
+      
+      $users1  = DB::table('sucuri_user')->where('id',$req->id)->get();
+        // dump($users->name); 
+         foreach($users1 as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+
+       
+      
+         $bhand = 'noncache_dir_pattern';
+      //  
+       $curl1 = curl_init();
+       $auth_data1 = array(
+           'k'    => $a_key,
+           's'    => $s_key,
+           'a'  => 'update_setting',
+           $req->list =>  $req->ip,
+           $bhand => $req->dir
+           // 'duration'=> $req->time,
+       ); 
+       
+      //  return $req_>ip;
+       
+       curl_setopt($curl1, CURLOPT_POST, 1);
+       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result1 = curl_exec($curl1);
+       if(!$result1){die("Connection Failure");}
+       curl_close($curl1);
+
+       
+       $message = json_decode($result1);
+
+     $message =$message->messages[0];
+  // $result = json_decode($result1 , true);
+  //   $message="";
+  //   $index=0;
+  //   foreach($result as $ok => $data)
+  //   { $index++;
+  //       if($index == 3){
+  //           foreach ($data as $message) {
+  //               $this->message= $message;
+  //           }
+  //       }
+  //   }
+
+  //   $string = implode(" ",$result['messages']);
+       
+  //      $curl1 = curl_init();
+  //      $auth_data1 = array(
+  //          'k'    => $a_key,
+  //          's'    => $s_key,
+  //          'a'  => 'show_settings',
+  //          'format' =>  'json'
+         
+  //      ); 
+  //      curl_setopt($curl1, CURLOPT_POST, 1);
+  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+  //      $result1 = curl_exec($curl1);
+  //      if(!$result1){die("Connection Failure");}
+  //      curl_close($curl1);
+      
+      if($req->dir == 'begins_with'){
+        $req->ip = "^".$req->ip;
+      }elseif($req->dir == 'ends_with'){
+      $req->ip = $req->ip."$";
+      }elseif($req->dir == 'equals'){
+      $req->ip = "^".$req->ip."$";
+      }
+
+      $data=array('list'=>$req->list, 'url' => $req->ip, 'pattern' =>$req->dir, 'domain_id' => $req->id);
+      DB::table('noncache')->insert($data);
+      
+      return back()->with('message', "Added");
+  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
+
+        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
+    }
+
+
+    public function insertBlock_from_view($sucuri_users,Request $req){
+       $sucuri_users;
+     // die('ok');
+      $users1  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();
+        // dump($users); 
+         foreach($users1 as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+
+       
+      
+        /// $bhand = 'block_from_viewing';
+      //  
+       $curl1 = curl_init();
+       $auth_data1 = array(
+           'k'    => $a_key,
+           's'    => $s_key,
+           'a'  => 'update_setting',
+           
+         'block_from_viewing[]' =>  $req->ip,
+         'update_geo_blocking' =>'1'
+          
+           // 'duration'=> $req->time,
+       ); 
+       
+      //  return $req_>ip;
+       
+       curl_setopt($curl1, CURLOPT_POST, 1);
+       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result1 = curl_exec($curl1);
+       if(!$result1){die("Connection Failure");}
+       curl_close($curl1);
+
+       
+       $message1 = json_decode($result1);
+//dd($message);
+     $message =$message1->messages[0];
+      $status =$message1->status;
+  // $result = json_decode($result1 , true);
+  //   $message="";
+  //   $index=0;
+  //   foreach($result as $ok => $data)
+  //   { $index++;
+  //       if($index == 3){
+  //           foreach ($data as $message) {
+  //               $this->message= $message;
+  //           }
+  //       }
+  //   }
+
+  //   $string = implode(" ",$result['messages']);
+       
+  //      $curl1 = curl_init();
+  //      $auth_data1 = array(
+  //          'k'    => $a_key,
+  //          's'    => $s_key,
+  //          'a'  => 'show_settings',
+  //          'format' =>  'json'
+         
+  //      ); 
+  //      curl_setopt($curl1, CURLOPT_POST, 1);
+  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+  //      $result1 = curl_exec($curl1);
+  //      if(!$result1){die("Connection Failure");}
+  //      curl_close($curl1);
+      
+     if($status==1){
+
+
+
+      $fetch  = DB::table('block_from_viewing')->where('user_id',$sucuri_users)->get();
+    $count=count($fetch);
+    if($count==1){
+      $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
+     // DB::table('block_from_viewing')->updateOrInsert($data);
+      DB::table('block_from_viewing')->where('user_id', $sucuri_users)->update(['country' => $req->ip]);
+    }else{
+      $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
+      DB::table('block_from_viewing')->updateOrInsert($data);
+    }
+      ///DB::table('table_name')->updateOrInsert($attributes, $values);
+      
+      return back()->with('message', "Country Blocked Successfully");
+
+     }else {
+
+      return back()->with('message', "Country Blocked Unsuccessfully");
+
+
+     }
+  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
+
+        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
+    }
+
+
+
+
+
+    public function insertBlock_from_posting($sucuri_users,Request $req){
+      $sucuri_users;
+    // die('ok');
+     $users1  = DB::table('sucuri_user')->where('id',$sucuri_users)->get();
+       // dump($users); 
+        foreach($users1 as $user){
+         // return "$user->name";
+          $s_key = "$user->s_key";
+           $a_key= "$user->a_key";
+      } 
+       
+
+      
+     
+       /// $bhand = 'block_from_viewing';
+     //  
+      $curl1 = curl_init();
+      $auth_data1 = array(
+          'k'    => $a_key,
+          's'    => $s_key,
+          'a'  => 'update_setting',
+          
+        'block_from_posting[]' =>  $req->ip,
+        'update_geo_blocking' =>'1'
+         
+          // 'duration'=> $req->time,
+      ); 
+      
+     //  return $req_>ip;
+      
+      curl_setopt($curl1, CURLOPT_POST, 1);
+      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      $result1 = curl_exec($curl1);
+      if(!$result1){die("Connection Failure");}
+      curl_close($curl1);
+
+      
+      $message1 = json_decode($result1);
+//dd($message);
+    $message =$message1->messages[0];
+     $status =$message1->status;
+ // $result = json_decode($result1 , true);
+ //   $message="";
+ //   $index=0;
+ //   foreach($result as $ok => $data)
+ //   { $index++;
+ //       if($index == 3){
+ //           foreach ($data as $message) {
+ //               $this->message= $message;
+ //           }
+ //       }
+ //   }
+
+ //   $string = implode(" ",$result['messages']);
+      
+ //      $curl1 = curl_init();
+ //      $auth_data1 = array(
+ //          'k'    => $a_key,
+ //          's'    => $s_key,
+ //          'a'  => 'show_settings',
+ //          'format' =>  'json'
+        
+ //      ); 
+ //      curl_setopt($curl1, CURLOPT_POST, 1);
+ //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+ //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+ //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+ //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+ //      $result1 = curl_exec($curl1);
+ //      if(!$result1){die("Connection Failure");}
+ //      curl_close($curl1);
+     
+    if($status==1){
+
+
+
+     $fetch  = DB::table('block_from_posting')->where('user_id',$sucuri_users)->get();
+   $count=count($fetch);
+   if($count==1){
+     $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
+    // DB::table('block_from_viewing')->updateOrInsert($data);
+     DB::table('block_from_posting')->where('user_id', $sucuri_users)->update(['country' => $req->ip]);
+   }else{
+     $data=array('user_id'=>$sucuri_users, 'country' => $req->ip);
+     DB::table('block_from_posting')->updateOrInsert($data);
+   }
+     ///DB::table('table_name')->updateOrInsert($attributes, $values);
+     
+     return back()->with('message', "Country Blocked Successfully");
+
+    }else {
+
+     return back()->with('message', "Country Blocked Unsuccessfully");
+
+
+    }
+ // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
+
+       // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
+   }
+
+
+    public function insertBlockCookie(Request $req){
+
+      
+      $users1  = DB::table('sucuri_user')->where('id',$req->id)->get();
+        // dump($users->name); 
+         foreach($users1 as $user){
+          // return "$user->name";
+           $s_key = "$user->s_key";
+            $a_key= "$user->a_key";
+       } 
+        
+
+       
+      
+         $bhand = 'noncache_dir_pattern';
+      //  
+       $curl1 = curl_init();
+       $auth_data1 = array(
+           'k'    => $a_key,
+           's'    => $s_key,
+           'a'  => 'update_setting',
+           'block_cookie' =>  $req->ip,
+           
+           // 'duration'=> $req->time,
+       ); 
+       
+      //  return $req_>ip;
+       
+       curl_setopt($curl1, CURLOPT_POST, 1);
+       curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+       curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+       curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+       curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+       $result1 = curl_exec($curl1);
+       if(!$result1){die("Connection Failure");}
+       curl_close($curl1);
+
+       
+       $message = json_decode($result1);
+
+     $message =$message->messages[0];
+  // $result = json_decode($result1 , true);
+  //   $message="";
+  //   $index=0;
+  //   foreach($result as $ok => $data)
+  //   { $index++;
+  //       if($index == 3){
+  //           foreach ($data as $message) {
+  //               $this->message= $message;
+  //           }
+  //       }
+  //   }
+
+  //   $string = implode(" ",$result['messages']);
+       
+  //      $curl1 = curl_init();
+  //      $auth_data1 = array(
+  //          'k'    => $a_key,
+  //          's'    => $s_key,
+  //          'a'  => 'show_settings',
+  //          'format' =>  'json'
+         
+  //      ); 
+  //      curl_setopt($curl1, CURLOPT_POST, 1);
+  //      curl_setopt($curl1, CURLOPT_POSTFIELDS, $auth_data1);
+  //      curl_setopt($curl1, CURLOPT_URL, 'https://waf.sucuri.net/api?v2');
+  //      curl_setopt($curl1, CURLOPT_RETURNTRANSFER, 1);
+  //      curl_setopt($curl1, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+  //      $result1 = curl_exec($curl1);
+  //      if(!$result1){die("Connection Failure");}
+  //      curl_close($curl1);
+      
+      
+
+      $data=array('url' => $req->ip, 'domain_id' => $req->id);
+      DB::table('blockcookie')->insert($data);
+      
+      return back()->with('message', 'Added');
+  // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]);
+
+        // return view('admin.dns.show', ['ok'=>$result1, 'message'=> $string]); 
+    }
+
+
 }
