@@ -169,7 +169,7 @@ $result=json_decode($ok);
     <div class="panel-body" >
         <div class="row" >
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('internal_ip_main', 'Internal IP Address*', ['class' => 'control-label']) !!}
+                {!! Form::label('internal_ip_main', 'Internal IP Address', ['class' => 'control-label']) !!}
                 {!! Form::text('internal_ip_main',  " ", ['class' => 'form-control', 'placeholder' => '']) !!}
                 {{-- $result->output->internal_ip_main, --}}
                 <p class="help-block"></p>
@@ -184,7 +184,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('security_level', 'Security Level*', ['class' => 'control-label']) !!}
+                {!! Form::label('security_level', 'Security Level', ['class' => 'control-label']) !!}
                 {!! Form::select('security_level', array($result->output->security_level => $result->output->security_level, 'high' => 'high', 'paranoid' => 'paranoid'), 'null' ,['class' => 'form-control', 'id' => 'sel1']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('security_level'))
@@ -197,7 +197,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('admin_access', 'Admin Access*', ['class' => 'control-label']) !!}
+                {!! Form::label('admin_access', 'Admin Access', ['class' => 'control-label']) !!}
                 {!! Form::select('admin_access', array($result->output->admin_access => $result->output->admin_access, 'open' => 'open', 'restricted' => 'restricted'), 'null' ,['class' => 'form-control', 'id' => 'sel2']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('admin_access'))
@@ -210,7 +210,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('comment_access', 'Comment Access*', ['class' => 'control-label']) !!}
+                {!! Form::label('comment_access', 'Comment Access', ['class' => 'control-label']) !!}
                 {!! Form::select('comment_access', array($result->output->comment_access => $result->output->comment_access, 'open' => 'open', 'restricted' => 'restricted'), 'null' ,['class' => 'form-control', 'id' => 'sel3']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('comment_access'))
@@ -223,7 +223,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('cache_mode', 'Cache Mode*', ['class' => 'control-label']) !!}
+                {!! Form::label('cache_mode', 'Cache Mode', ['class' => 'control-label']) !!}
                 {!! Form::select('cache_mode', array($result->output->cache_mode => $result->output->cache_mode, 'docache' => 'docache', 'nocache' => 'nocache', 'sitecache' => 'sitecache', 'nocacheatall' => 'nocacheatall'), 'null' ,['class' => 'form-control', 'id' => 'sel4']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('cache_mode'))
@@ -238,7 +238,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('detect_adv_evasion', 'Advanced evasion*', ['class' => 'control-label']) !!}
+                {!! Form::label('detect_adv_evasion', 'Advanced evasion', ['class' => 'control-label']) !!}
                 {!! Form::select('detect_adv_evasion', array($result->output->detect_adv_evasion => $result->output->detect_adv_evasion, 'enabled' => 'enabled', 'disabled' => 'disabled'), 'null' ,['class' => 'form-control', 'id' => 'sel5']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('detect_adv_evasion'))
@@ -253,7 +253,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('aggressive_bot_filter', 'Aggressive bot filter*', ['class' => 'control-label']) !!}
+                {!! Form::label('aggressive_bot_filter', 'Aggressive bot filter', ['class' => 'control-label']) !!}
                 {!! Form::select('aggressive_bot_filter', array($result->output->aggressive_bot_filter => $result->output->aggressive_bot_filter, 'enabled' => 'enabled', 'disabled' => 'disabled'), 'null' ,['class' => 'form-control', 'id' => 'sel6']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('cache_mode'))
@@ -271,7 +271,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('compression_mode', 'Compression*', ['class' => 'control-label']) !!}
+                {!! Form::label('compression_mode', 'Compression', ['class' => 'control-label']) !!}
                 {!! Form::select('compression_mode', array($result->output->compression_mode => $result->output->compression_mode, 'enabled' => 'enabled', 'disabled' => 'disabled'), 'null' ,['class' => 'form-control', 'id' => 'sel7']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('compression_mode'))
@@ -287,7 +287,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('force_https', 'Protocol Redirection*', ['class' => 'control-label']) !!}
+                {!! Form::label('force_https', 'Protocol Redirection', ['class' => 'control-label']) !!}
                 {!! Form::select('force_https', array($result->output->force_https => $result->output->force_https , 'http' => 'http', 'https' => 'https'), 'null' ,['class' => 'form-control', 'id' => 'sel8']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('force_https'))
@@ -303,7 +303,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('spdy_mode', 'HTTP/2 Support*', ['class' => 'control-label']) !!}
+                {!! Form::label('spdy_mode', 'HTTP/2 Support', ['class' => 'control-label']) !!}
                 {!! Form::select('spdy_mode', array($result->output->spdy_mode => $result->output->spdy_mode, 'enabled' => 'enabled', 'disabled' => 'disabled'), 'null' ,['class' => 'form-control', 'id' => 'sel9']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('spdy_mode'))
@@ -319,7 +319,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('max_upload_size', 'Maximum Upload Size*', ['class' => 'control-label']) !!}
+                {!! Form::label('max_upload_size', 'Maximum Upload Size', ['class' => 'control-label']) !!}
                 {!! Form::select('max_upload_size', array($result->output->max_upload_size => $result->output->max_upload_size, '5m' => '5m', '10m' => '10m', '50m' => '50m', '100m' => '100m', '200m' => '200m', '400m' => '400m'), 'null' ,['class' => 'form-control', 'id' => 'sel10']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('max_upload_size'))
@@ -335,7 +335,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('force_sec_headers', 'Additional Security*', ['class' => 'control-label']) !!}
+                {!! Form::label('force_sec_headers', 'Additional Security', ['class' => 'control-label']) !!}
                 {!! Form::select('force_sec_headers', array($result->output->force_sec_headers => $result->output->force_sec_headers, 'enabled' => 'enabled', 'disabled' => 'disabled'), 'null' ,['class' => 'form-control', 'id' => 'sel11']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('force_sec_headers'))
@@ -351,7 +351,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('unfiltered_html', 'unfiltered HTML*', ['class' => 'control-label']) !!}
+                {!! Form::label('unfiltered_html', 'unfiltered HTML', ['class' => 'control-label']) !!}
                 {!! Form::select('unfiltered_html', array($result->output->unfiltered_html => $result->output->unfiltered_html, 'allow_unfilter' => 'allow_unfilter', 'block_unfilter' => 'block_unfilter'), 'null' ,['class' => 'form-control', 'id' => 'sel12']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('unfiltered_html'))
@@ -367,7 +367,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('block_php_upload', 'Stop upload of PHP*', ['class' => 'control-label']) !!}
+                {!! Form::label('block_php_upload', 'Stop upload of PHP', ['class' => 'control-label']) !!}
                 {!! Form::select('block_php_upload', array($result->output->block_php_upload => $result->output->block_php_upload, 'allow_uploads' => 'allow_uploads', 'block_uploads' => 'block_uploads'), 'null' ,['class' => 'form-control', 'id' => 'sel13']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('block_php_upload'))
@@ -384,7 +384,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('behind_cdn', 'Site is behind CDN*', ['class' => 'control-label']) !!}
+                {!! Form::label('behind_cdn', 'Site is behind CDN', ['class' => 'control-label']) !!}
                 {!! Form::select('behind_cdn', array($result->output->behind_cdn => $result->output->behind_cdn, 'none' => 'none', 'behind_akamai' => 'behind_akamai', 'behind_cloudflare' => 'behind_cloudflare', 'behind_maxcdn' => 'behind_maxcdn', 'behind_cdn' => 'behind_cdn'), 'null' ,['class' => 'form-control', 'id' => 'sel14']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('behind_cdn'))
@@ -399,7 +399,7 @@ $result=json_decode($ok);
 
         <div class="row">
             <div class="col-xs-12 form-group" style="width: 100%;">
-                {!! Form::label('http_flood_protection', 'Flood protection*', ['class' => 'control-label']) !!}
+                {!! Form::label('http_flood_protection', 'Flood protection', ['class' => 'control-label']) !!}
                 {!! Form::select('http_flood_protection', array($result->output->http_flood_protection => $result->output->http_flood_protection, 'none' => 'none', 'behind_akamai' => 'behind_akamai', 'behind_cloudflare' => 'behind_cloudflare', 'behind_maxcdn' => 'behind_maxcdn', 'behind_cdn' => 'behind_cdn'), 'null' ,['class' => 'form-control', 'id' => 'sel15']); !!}
                 <p class="help-block"></p>
                 @if($errors->has('http_flood_protection'))
@@ -419,8 +419,13 @@ $result=json_decode($ok);
 
 
 
-
-        
+        <!--div class="row" >
+            <div class="col-xs-12 form-group" style="width: 100%;">
+                {!! Form::label('block_from_viewing', 'Block From Viewing', ['class' => 'control-label']) !!}
+                {!! Form::text('block_from_viewing',  " ", ['class' => 'form-control', 'placeholder' => 'US etc']) !!}
+               
+            </div>
+        </div-->
 
 
 

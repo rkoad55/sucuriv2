@@ -78,6 +78,143 @@ class ZoneController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+public function pauseInternalIp(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.pauseInternalIp',['sucuri_user'=>$sucuri_user[0]]);
+    }
+
+    public function playInternalIp(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id; 
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.playInternalIp',['sucuri_user'=>$sucuri_user[0]]);
+    }
+    public function deleteInternalIp(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id; 
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.deleteInternalIp',['sucuri_user'=>$sucuri_user[0]]);
+    }
+    public function aggressive(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.aggressive',['sucuri_user'=>$sucuri_user[0]]);
+    }
+
+ public function blockReferer(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.blockReferer',['sucuri_user'=>$sucuri_user[0]]);
+    }
+    public function failoverTime(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+   
+      return view('admin.dns.failoverTime',['sucuri_user'=>$sucuri_user[0]]);
+    }
+
+
+
+ public function blockAttackerCountry(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.blockAttackerCountry',['sucuri_user'=>$sucuri_user[0]]);
+    }
+     
+     public function twofactorauth_path(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+             
+
+      return view('admin.dns.twofactorauth_path',['sucuri_user'=>$sucuri_user[0]]);
+    }
+ public function idsMonitoring(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.idsMonitoring',['sucuri_user'=>$sucuri_user[0]]);
+    }
+    public function forwardQueryString(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.forwardquerystrings',['sucuri_user'=>$sucuri_user[0]]);
+    }
+
+      public function blockUser(Request $request)
+    {
+      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
+
+    // $ided=auth()->user()->id;
+
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+            
+
+      return view('admin.dns.userBlockAgent',['sucuri_user'=>$sucuri_user[0]]);
+    }
+
+    function domainAlias(Request $request){
+
+        
+          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
+             
+ 
+      return view('admin.dns.dmainAlias',['sucuri_user'=>$sucuri_user[0]]);
+    }
     public function index(Request $request)
     {
 
@@ -707,6 +844,7 @@ if($string=='You have already added this domain to your account' and $status==0 
          $block_php_upload=$request->block_php_upload;
          $behind_cdn=$request->behind_cdn;
          $http_flood_protection=$request->http_flood_protection;
+         $block_from_viewing=$request->block_from_viewing;
          
           //$sucuri_users;
 
@@ -746,7 +884,8 @@ if($string=='You have already added this domain to your account' and $status==0 
              'unfiltered_html' =>  $unfiltered_html,
              'block_php_upload' =>  $block_php_upload,
              'behind_cdn' =>  $behind_cdn,
-             'http_flood_protection' =>  $http_flood_protection
+             'http_flood_protection' =>  $http_flood_protection,
+             'block_from_viewing[]' =>   $block_from_viewing
              
              
          );
@@ -2324,114 +2463,5 @@ curl_close($ch);
 
 
 }
-
-
-public function aggressive(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-            
-
-      return view('admin.dns.aggressive',['sucuri_user'=>$sucuri_user[0]]);
-    }
-
- public function blockReferer(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-            
-
-      return view('admin.dns.blockReferer',['sucuri_user'=>$sucuri_user[0]]);
-    }
-    public function failoverTime(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-            
-   
-      return view('admin.dns.failoverTime',['sucuri_user'=>$sucuri_user[0]]);
-    }
-
-
-
- public function blockAttackerCountry(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-            
-
-      return view('admin.dns.blockAttackerCountry',['sucuri_user'=>$sucuri_user[0]]);
-    }
-     
-     public function twofactorauth_path(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-             
-
-      return view('admin.dns.twofactorauth_path',['sucuri_user'=>$sucuri_user[0]]);
-    }
- public function idsMonitoring(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-            
-
-      return view('admin.dns.idsMonitoring',['sucuri_user'=>$sucuri_user[0]]);
-    }
-    public function forwardQueryString(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-            
-
-      return view('admin.dns.forwardquerystrings',['sucuri_user'=>$sucuri_user[0]]);
-    }
-
-      public function blockUser(Request $request)
-    {
-      // return view('admin.dns.aggressive',['ok'=>$result ,'id'=>$sucuri_users]);
-
-    // $ided=auth()->user()->id;
-
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-            
-
-      return view('admin.dns.userBlockAgent',['sucuri_user'=>$sucuri_user[0]]);
-    }
-
-    function domainAlias(Request $request){
-
-        
-          $sucuri_user = DB::table('sucuri_user')->where([['id' , $request->route('zone')]])->get();
-             
- 
-      return view('admin.dns.dmainAlias',['sucuri_user'=>$sucuri_user[0]]);
-    }
-
-
-
-
 
 }

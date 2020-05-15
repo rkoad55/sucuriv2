@@ -11,7 +11,7 @@
     </div>
     @endif
 
-
+   
     <p>
         <a href="{{ route('admin.resellers.create') }}" class="btn btn-success">@lang('global.app_add_new')</a>
     </p>
@@ -24,10 +24,10 @@
         <div class="panel-body table-responsive">
            
             
-            <table class="table table-bordered table-striped {{ count($users) > 0 ? 'datatable' : '' }} dt-select">
+            <table class="table table-bordered table-striped {{ count($users) > 0 ? 'datatable' : '' }} ">
                 <thead>
                     <tr>
-                        <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
+                        <th style="text-align:center;"><!-- <input type="checkbox" id="select-all" name="checkall" /> -->MultiSelect</th>
 
                         <th>@lang('global.users.fields.name')</th>
                         <th>@lang('global.users.fields.email')</th>
@@ -40,14 +40,13 @@
                 
                 <tbody>
                     @if (count($users) > 0)
-                    
+                    <?php $i=0; ?>
                         @foreach ($users as $val)
 
                             @if($val->id!=1)
                            
                             <tr data-entry-id="{{ $val->id }}">
-                                <td></td>
-
+                                <td ><input type="checkbox"id="select" name="check" value="{{ $val->id }}" class="theClass" /></td>
                                 <td>{{ $val->name }}</td>
                                 <td>{{ $val->email }}</td>
                                 <td>
@@ -116,7 +115,7 @@
 @if (count($users) > 0)
                     
                     @foreach ($users as $val)
-
+    
                         @if($val->id!=1)
 <div class="modal fade" id="exampleModal{{$val->user_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -158,8 +157,21 @@
                         @endforeach  
                         @endif        </tbody>
             </table>
-        </div>
-    </div>
+            <form action="{{route('admin.Selecteddelete')}}" method="get" > 
+            <input type="hidden" name="deleteID" id="deleteID" value=""> 
+            <input type="submit" id="selected" name="delete" value="Selected Delete" class="btn btn-danger" style="display: none;" />
+            </form>
+        </div> 
+    </div> 
+    <script type="text/javascript">
+        var id = [];
+        $('.theClass').change(function(){
+            $('#selected').css('display','block');
+        id = $('.theClass:checked').map(function(){return this.value}).get();
+        $('#deleteID').val(id.toString());
+        });
+       
+    </script>
     <br>
     <br>
     <br>

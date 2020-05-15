@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dns extends Model
 {
-    protected $table = 'url_paths';
+    protected $table = 'dns';
 
-    // protected $guarded = ['id'];
-    public $primaryKey = 'id';
-    
+    protected $guarded = ['id'];
+
    
 
 

@@ -120,7 +120,6 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
 
                         </a>
                     </li>
-
                     <li {{{ (Request::is('*/urlpaths') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@urlpaths',Request::segment(2))}}">
                             <span class="icon"><i class="far fa-user"></i>
@@ -154,9 +153,43 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
                             <span class="pull-right-container"></span>
 
                         </a>
-                    </li>
+                    </li> 
+                    <li {{{ (Request::is('*/block_from_posting') ? 'class=active' : '') }}}>
+                        <a  id = "anchor" href="{{action('Admin\DnsController@block_from_posting',Request::segment(2))}}">
+                            <span class="icon"><i class="dripicons-paperclip"></i>
+                            <span  style="padding-left: 10px;" class="title"> Block From Posting</span>
+                            <span class="pull-right-container"></span>
 
-                      <li {{{ (Request::is('*/aggressive') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        </a>
+                    </li>
+                     <li {{{ (Request::is('*/pause_internal_ip') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{ action('Admin\ZoneController@pauseInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Pause Internal IP</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>   
+                    </li>  
+                     <li {{{ (Request::is('*/playInternalIp') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{  action('Admin\ZoneController@playInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Play Internal IP</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>  
+                    </li>  
+                     <li {{{ (Request::is('*/deleteInternalIp') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{ action('Admin\ZoneController@deleteInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Delete Internal Ip</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>  
+
+                    <li {{{ (Request::is('*/aggressive') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@aggressive',Request::segment(2)) }}">
                             <span class="icon"><i class="fas fa-industry"></i> </span>
                             <span style="padding-left: 10px;" class="title">Aggressive Boot Filter</span>
@@ -243,14 +276,22 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
 
                         </a>
                     </li> 
-                    <li {{{ (Request::is('*/block_from_posting') ? 'class=active' : '') }}}>
-                        <a  id = "anchor" href="{{action('Admin\DnsController@block_from_posting',Request::segment(2))}}">
+                    <li {{{ (Request::is('*/ahttp_method') ? 'class=active' : '') }}}>
+                        <a  id = "anchor" href="{{action('Admin\DnsController@ahttp_method',Request::segment(2))}}">
                             <span class="icon"><i class="dripicons-paperclip"></i>
-                            <span  style="padding-left: 10px;" class="title"> Block From Posting</span>
+                            <span  style="padding-left: 10px;" class="title"> HTTP Methods</span>
                             <span class="pull-right-container"></span>
 
                         </a>
-                    </li>
+                    </li> 
+                    <li {{{ (Request::is('*/add_certificate') ? 'class=active' : '') }}}>
+                        <a  id = "anchor" href="{{action('Admin\DnsController@add_certificate',Request::segment(2))}}">
+                            <span class="icon"><i class="dripicons-paperclip"></i>
+                            <span  style="padding-left: 10px;" class="title"> SSL Certificate</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li> 
 
                 <?php 
             }
@@ -336,11 +377,8 @@ else{
                             <span class="pull-right-container"></span>
 
                         </a>
-                    </li>
-                    
-
-      
-                    <li {{{ (Request::is('*/urlpaths') ? 'class=active' : '') }}} >
+                    </li> 
+                    <li {{{ (Request::is('*/urlpaths') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@urlpaths',Request::segment(2))}}">
                             <span class="icon"><i class="far fa-user"></i>
                             <span  style="padding-left: 10px;" class="title"> URL Paths</span>
@@ -357,7 +395,7 @@ else{
 
                         </a>
                     </li>
-                  
+                    
                     <li {{{ (Request::is('*/blockcookie') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@blockcookie',Request::segment(2))}}">
                             <span class="icon"><i class="dripicons-paperclip"></i>
@@ -366,7 +404,6 @@ else{
 
                         </a>
                     </li>
-            
                     <li {{{ (Request::is('*/block_from_viewing') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@block_from_viewing',Request::segment(2))}}">
                             <span class="icon"><i class="dripicons-paperclip"></i>
@@ -374,9 +411,43 @@ else{
                             <span class="pull-right-container"></span>
 
                         </a>
-                    </li>
+                    </li> 
+                    <li {{{ (Request::is('*/block_from_posting') ? 'class=active' : '') }}}>
+                        <a  id = "anchor" href="{{action('Admin\DnsController@block_from_posting',Request::segment(2))}}">
+                            <span class="icon"><i class="dripicons-paperclip"></i>
+                            <span  style="padding-left: 10px;" class="title"> Block From Posting</span>
+                            <span class="pull-right-container"></span>
 
-                      <li {{{ (Request::is('*/aggressive') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        </a>
+                    </li>
+                     <li {{{ (Request::is('*/pause_internal_ip') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{ action('Admin\ZoneController@pauseInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Pause Internal IP</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>   
+                    </li>  
+                     <li {{{ (Request::is('*/playInternalIp') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{  action('Admin\ZoneController@playInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Play Internal IP</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>  
+                    </li>  
+                     <li {{{ (Request::is('*/deleteInternalIp') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{ action('Admin\ZoneController@deleteInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Delete Internal Ip</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>  
+
+                    <li {{{ (Request::is('*/aggressive') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@aggressive',Request::segment(2)) }}">
                             <span class="icon"><i class="fas fa-industry"></i> </span>
                             <span style="padding-left: 10px;" class="title">Aggressive Boot Filter</span>
@@ -463,14 +534,23 @@ else{
 
                         </a>
                     </li> 
-                    <li {{{ (Request::is('*/block_from_posting') ? 'class=active' : '') }}}>
-                        <a  id = "anchor" href="{{action('Admin\DnsController@block_from_posting',Request::segment(2))}}">
+                    <li {{{ (Request::is('*/ahttp_method') ? 'class=active' : '') }}}>
+                        <a  id = "anchor" href="{{action('Admin\DnsController@ahttp_method',Request::segment(2))}}">
                             <span class="icon"><i class="dripicons-paperclip"></i>
-                            <span  style="padding-left: 10px;" class="title"> Block From Posting</span>
+                            <span  style="padding-left: 10px;" class="title"> HTTP Methods</span>
                             <span class="pull-right-container"></span>
 
                         </a>
-                    </li>
+                    </li> 
+                    <li {{{ (Request::is('*/add_certificate') ? 'class=active' : '') }}}>
+                        <a  id = "anchor" href="{{action('Admin\DnsController@add_certificate',Request::segment(2))}}">
+                            <span class="icon"><i class="dripicons-paperclip"></i>
+                            <span  style="padding-left: 10px;" class="title"> SSL Certificate</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li> 
+
 
                     <li {{{ (Request::is('*/crypto') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@crypto',Request::segment(2)) }}">
@@ -480,8 +560,6 @@ else{
 
                         </a>
                     </li> 
-
-
 
                     <li {{{ (Request::is('*/content-protection') ? 'class=active' : '') }}} {{{ (Request::is('trails/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@contentProtection',Request::segment(2)) }}">

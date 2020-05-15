@@ -73,7 +73,30 @@ class UsersController extends Controller
         
         return view('admin.users.resellers', compact('users','domains'));
     }
- 
+   
+ function deleted(Request $req){
+    $id = explode(",",$req->deleteID);
+    foreach ($id as $key ) {
+       DB::table('brandings')->where("id",$key)->delete();
+    }
+      $us  = DB::table('brandings')->get();
+       // $us = User::where('owner', 1)->get();
+        $users = array();
+        // dd($us->branding);
+        $pckgID = 0;
+        foreach ($us as  $value) {
+            # code...
+            if($value->pckg_detail !=null){
+                $users[]= $value;  
+                $pckgID = $value->pckg_detail;
+                $domain =DB::table('packages')->where('id',$pckgID)->get();
+                $domains[] = $domain[0]->domains;
+            }
+        }
+         
+        return view('admin.users.resellers', compact('users','domains'));
+ }
+
     function email($name , $to , $from , $subject , $msg){
         
 $to_email = $to;
@@ -137,11 +160,11 @@ mail($to_email,$subject,$message,$headers);
         }
     $users  = DB::table('sucuri_user')->where('active' , '0')->orwhere('active','2')->get();
 
-      $name = "";
+     /* $name = "";
       $to = "bilal.shaikh@s4scorp.com";
       $from = "test@gmail.com";
       $subject = "Delete Doamin Request";
-      $msg = "Your Delete Domain Request Farware to admin when admin is approved so domain is deleted";
+      $msg = "Your Delete Domain Request Farware to admin when admin is approved so domain is deleted"; */
 // dd("ok ok");
       // email($name , $to , $from , $subject , $msg);
 
