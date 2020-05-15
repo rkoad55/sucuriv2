@@ -419,13 +419,21 @@ $result=json_decode($ok);
 
 
 
+<<<<<<< HEAD
         <!--div class="row" >
+=======
+        <div class="row" >
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
             <div class="col-xs-12 form-group" style="width: 100%;">
                 {!! Form::label('block_from_viewing', 'Block From Viewing', ['class' => 'control-label']) !!}
                 {!! Form::text('block_from_viewing',  " ", ['class' => 'form-control', 'placeholder' => 'US etc']) !!}
                
             </div>
+<<<<<<< HEAD
         </div-->
+=======
+        </div>
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 
 
 

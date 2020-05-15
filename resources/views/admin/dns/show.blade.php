@@ -148,7 +148,21 @@ $results=json_decode($ok);
 
 
 
+<<<<<<< HEAD
 @stop 
+=======
+<<<<<<< HEAD
+@stop 
+=======
+
+
+
+
+
+
+@stop
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 
 @section('javascript') 
 <script>

@@ -18,9 +18,19 @@
     $check = DB::table('advanceSetting')->where(['domainID' => $request->route('zone'), 'name' =>  'aggressive_bot_filter'])->get();
 
   ?>
+<<<<<<< HEAD
  @if(Session::has('message'))
 <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
 @endif
+=======
+ @if(isset($message))
+    <div class="alert alert-danger" role="alert">
+        {{  $message }}
+		<meta http-equiv = "refresh" content = "1; url = {{action('Admin\DnsController@index',Request::segment(2))}}" />
+
+    </div>
+    @endif
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
             {{-- For Error --}}
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -59,7 +69,11 @@
                 </div>
             </div>
 <h3>Remove Block User Agent</h3>
+<<<<<<< HEAD
             <table class="table table-bordered">
+=======
+            <table border="1">
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
                 <tr>
                     <th>S.No</th>
                     <th>Domain ALias</th>

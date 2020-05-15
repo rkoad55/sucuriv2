@@ -4,7 +4,15 @@ Route::get('/', function () { return redirect('/admin/home'); });
 Route::get('admin/darkmode', 'HomeController@darkmode');
 Route::get('/darkmode', 'HomeController@darkmode');
 Route::post('ajax/set_current_time_zone', array('as' => 'ajaxsetcurrenttimezone','uses' => 'AjaxController@setCurrentTimeZone'));
+<<<<<<< HEAD
 
+=======
+Route::get('uploads/{filename}', function ($filename) {
+    return file_get_contents(
+        storage_path('sucuri2/' . $filename)
+    );
+}); 
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('auth.login');
 Route::post('login', 'Auth\LoginController@login')->name('auth.login');
@@ -23,6 +31,10 @@ Route::patch('change_password', 'Auth\ChangePasswordController@changePassword')-
 Route::post('admin/updates1', 'Admin\UsersController@updatemanage')->name('admin.updates1');
     
   
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 Route::get('insertWhiteURL' , 'Admin\DnsController@insertWhiteURL');
 Route::get('admin/{zone}/urlpaths' , 'Admin\DnsController@urlpaths');   
 Route::get('admin/{zone}/noncache' , 'Admin\DnsController@noncache');   
@@ -69,6 +81,7 @@ Route::get('removeBlockUseragent' , 'Admin\DnsController@removeBlockUseragent');
 Route::get('twofactorauth_path' , 'Admin\DnsController@twofactorauth_path'); 
 
 Route::get('item_twofactorauth_path' , 'Admin\DnsController@item_twofactorauth_path');
+<<<<<<< HEAD
 
 Route::get('block_attacker_country' , 'Admin\DnsController@blockAttackerCountry'); 
 
@@ -76,10 +89,26 @@ Route::get('ids_monitoring' , 'Admin\DnsController@idsMonitoring');
 
 Route::get('failOverTime' , 'Admin\DnsController@failOverTime'); 
 
+=======
+
+Route::get('block_attacker_country' , 'Admin\DnsController@blockAttackerCountry'); 
+
+Route::get('ids_monitoring' , 'Admin\DnsController@idsMonitoring');
+
+Route::get('failOverTime' , 'Admin\DnsController@failOverTime'); 
+
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 Route::get('addDomainAlias' , 'Admin\DnsController@addDomainAlias'); 
 
 Route::get('removeDomainAlias' , 'Admin\DnsController@removeDomainAlias'); 
 
+<<<<<<< HEAD
+=======
+=======
+
+Route::get('insertIp' , 'Admin\DnsController@addIp');   
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 Route::get('my_account','HomeController@my_account');
 
 Route::get('admin.pacakge.destroy', 'Admin\PackageController@deletePckg')->name('admin.pacakge.destroy'); 
@@ -147,6 +176,10 @@ Route::get('resellers/createPckg', 'Admin\PackageController@manage')->name('rese
     Route::get('{zone}/overview', 'Admin\ZoneController@show');
     //Route::get('{zone}/overview', 'Admin\ZoneController@pending');
     Route::get('{zone}/crypto', 'Admin\ZoneController@crypto');
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
     Route::get('{zone}/aggressive', 'Admin\ZoneController@aggressive');
     Route::get('{zone}/domain', 'Admin\ZoneController@domainAlias');
 
@@ -173,6 +206,11 @@ Route::get('{zone}/deleteInternalIp', 'Admin\ZoneController@deleteInternalIp');
 Route::get('{zone}/pause_internal_ip', 'Admin\ZoneController@pauseInternalIp');
 
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
     Route::get('{zone}/performance', 'Admin\ZoneController@performance');
     Route::get('{zone}/caching', 'Admin\ZoneController@caching');
 
@@ -298,6 +336,10 @@ Route::get('delete1', 'Admin\UsersController@deleteUsers')->name('delete1');
 
 // Route::get('panel_logs', 'Admin\PanelLogController@index')->name('panelLogs');
 // Route::get('panel_logs/{zone}', 'Admin\PanelLogController@show')->name('showPanelLogs');
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 Route::get('{zone}/removewhitedir/rr','Admin\DnsController@removewhitedir');
 Route::get('/removewhitedir/rr','Admin\DnsController@removewhitedir');
 Route::get('{zone}/removeblackdir/rr','Admin\DnsController@removeblackdir');
@@ -321,6 +363,11 @@ Route::get('{zone}/black/{ip}','Admin\DnsController@blackip');
  
 Route::get('{zone}/black/removeblack/rr','Admin\DnsController@removeblack');
 Route::get('/removeblack/rr','Admin\DnsController@removeblack');
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 
 // Route::get('els/{zone}', 'Admin\ELSController@show')->name('showELS');
 

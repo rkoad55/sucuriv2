@@ -18,9 +18,19 @@
     $check = DB::table('advanceSetting')->where(['domainID' => $request->route('zone'), 'name' =>  'forwardquerystrings_mode'])->get();
 
   ?>
+<<<<<<< HEAD
  @if(Session::has('message'))
 <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
 @endif
+=======
+ @if(isset($message))
+    <div class="alert alert-danger" role="alert">
+        {{  $message }}
+		<meta http-equiv = "refresh" content = "1; url = {{action('Admin\DnsController@index',Request::segment(2))}}" />
+
+    </div>
+    @endif
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
             {{-- For Error --}}
                 @if ($errors->any())
                     <div class="alert alert-danger">

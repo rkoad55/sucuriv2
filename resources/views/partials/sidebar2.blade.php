@@ -120,6 +120,10 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
 
                         </a>
                     </li>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
                     <li {{{ (Request::is('*/urlpaths') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@urlpaths',Request::segment(2))}}">
                             <span class="icon"><i class="far fa-user"></i>
@@ -167,6 +171,7 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
                             <span class="icon"><i class="fas fa-industry"></i> </span> 
                             <span style="padding-left: 10px;" class="title">Pause Internal IP</span>
                             <span class="pull-right-container"></span>
+<<<<<<< HEAD
 
                         </a>
                     </li>   
@@ -189,6 +194,30 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
                         </a>
                     </li>  
 
+=======
+
+                        </a>
+                    </li>   
+                    </li>  
+                     <li {{{ (Request::is('*/playInternalIp') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{  action('Admin\ZoneController@playInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Play Internal IP</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>  
+                    </li>  
+                     <li {{{ (Request::is('*/deleteInternalIp') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
+                        <a id = "anchor" href="{{ action('Admin\ZoneController@deleteInternalIp',Request::segment(2)) }}">
+                            <span class="icon"><i class="fas fa-industry"></i> </span> 
+                            <span style="padding-left: 10px;" class="title">Delete Internal Ip</span>
+                            <span class="pull-right-container"></span>
+
+                        </a>
+                    </li>  
+
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
                     <li {{{ (Request::is('*/aggressive') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@aggressive',Request::segment(2)) }}">
                             <span class="icon"><i class="fas fa-industry"></i> </span>
@@ -276,6 +305,7 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
 
                         </a>
                     </li> 
+<<<<<<< HEAD
                     <li {{{ (Request::is('*/ahttp_method') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@ahttp_method',Request::segment(2))}}">
                             <span class="icon"><i class="dripicons-paperclip"></i>
@@ -292,6 +322,11 @@ $user  = DB::table('brandings')->where('user_id',$id)->get();
 
                         </a>
                     </li> 
+=======
+=======
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
+                    
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
 
                 <?php 
             }
@@ -377,6 +412,10 @@ else{
                             <span class="pull-right-container"></span>
 
                         </a>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
                     </li> 
                     <li {{{ (Request::is('*/urlpaths') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@urlpaths',Request::segment(2))}}">
@@ -534,6 +573,7 @@ else{
 
                         </a>
                     </li> 
+<<<<<<< HEAD
                     <li {{{ (Request::is('*/ahttp_method') ? 'class=active' : '') }}}>
                         <a  id = "anchor" href="{{action('Admin\DnsController@ahttp_method',Request::segment(2))}}">
                             <span class="icon"><i class="dripicons-paperclip"></i>
@@ -550,8 +590,21 @@ else{
 
                         </a>
                     </li> 
+=======
 
 
+=======
+                    </li>
+                    
+
+      
+
+                  
+            
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
+
+
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
                     <li {{{ (Request::is('*/crypto') ? 'class=active' : '') }}} {{{ (Request::is('clear_cache/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@crypto',Request::segment(2)) }}">
                             <span class="icon"><i class="fas fa-industry"></i> </span>
@@ -561,6 +614,14 @@ else{
                         </a>
                     </li> 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 9f70e3d9938569c081111be10d6dce216bdbcbd8
+>>>>>>> 682dded0748d400b51254855d777a695ec5ca0f4
                     <li {{{ (Request::is('*/content-protection') ? 'class=active' : '') }}} {{{ (Request::is('trails/*') ? 'class=active' : '') }}}> 
                         <a id = "anchor" href="{{ action('Admin\ZoneController@contentProtection',Request::segment(2)) }}">
                             <span class="icon"><i class="fas fa-book"></i> </span>
